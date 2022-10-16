@@ -1,14 +1,11 @@
 import { getMovies } from "./tempAPI";
 import React, { Component } from "react";
-import axios from "axios";
 
 export default class Banner extends Component {
-
-  
   render() {
     // console.log(getMovies.results);
-    let movie = getMovies.results[1];
-    
+    let movie = getMovies.results[4];
+
     return (
       <>
         {movie === "" ? (

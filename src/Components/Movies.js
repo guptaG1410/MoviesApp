@@ -9,6 +9,7 @@ export default class Movies extends Component {
       pageloaded: [1],
       currPage: 1,
       movies: [],
+      favourites: []
     };
   }
 
@@ -70,6 +71,25 @@ export default class Movies extends Component {
     ); //Here, changeMovies would act as a callback.
   };
 
+  handleFavourites = (movie) => {
+    let oldData = JSON.parse(localStorage.getItem("movies-app") || "[]");
+    if (this.state.favourites.includes(movie.id)) {
+      oldData = oldData.filter((m) => m.id != movie.id);
+    } else {
+      oldData.push(movie);
+    }
+    localStorage.setItem("movies-app", JSON.stringify(oldData));
+    console.log(oldData);
+    this.handleFavouritesState();
+  };
+  handleFavouritesState = () => {
+    let oldData = JSON.parse(localStorage.getItem("movies-app") || "[]");
+    let temp = oldData.map((movie) => movie.id);
+    this.setState({
+      favourites: [...temp],
+    });
+  };
+
   render() {
     return (
       <>
@@ -86,9 +106,9 @@ export default class Movies extends Component {
           </div>
         ) : (
           <div>
-            <h3 className="text-center">
+            <h1 className="text-center">
               <strong>Trending</strong>
-            </h3>
+            </h1>
             <div className="movies-list">
               {this.state.movies.map((movieObj) => (
                 <div
@@ -102,18 +122,19 @@ export default class Movies extends Component {
                     style={{ height: "40vh", width: "20vw" }}
                     alt={movieObj.title}
                   />
-                  <h3 className="card-title movies-title">
+                  <h4 className="card-title movies-title">
                     {movieObj.original_title}
-                  </h3>
+                  </h4>
                   <div className="button-wrapper">
                     {this.state.hoverId === movieObj.id && (
-                      <a className="btn btn-primary movies-button">
-                        Add to Favourites
+                      <a className="btn btn-primary movies-button" onClick={() => this.handleFavourites(movieObj)}>
+                        {this.state.favourites.includes(movieObj.id) ? "Remove from favourites" : "Add to favourites"}
                       </a>
                     )}
                   </div>
                 </div>
               ))}
+              {/* Pagination */}
             </div>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <nav aria-label="Page navigation example">
